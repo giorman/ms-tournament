@@ -16,7 +16,7 @@ public class DataDto {
     private String name;
     private String description;
     private String game;
-    private OrganizerDto owner;
+    private OrganizerDto organizer;
     private CategoryDto category;
     private Date eventDate;
     private StatusDto status;
