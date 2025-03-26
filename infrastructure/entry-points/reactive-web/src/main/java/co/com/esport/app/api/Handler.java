@@ -1,6 +1,8 @@
 package co.com.esport.app.api;
 
 import co.com.esport.app.api.dtos.request.TournamentRqDto;
+import co.com.esport.app.model.gestiontorneo.request.TournamentRq;
+import co.com.esport.app.usecase.creartorneo.ManagementTournamentUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -10,7 +12,8 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class Handler {
-//private  final UseCase useCase;
+
+    private final ManagementTournamentUseCase managementTournamentUseCase;
 //private  final UseCase2 useCase2;
 
     public Mono<ServerResponse> crearTorneo(ServerRequest serverRequest) {
@@ -20,6 +23,7 @@ public class Handler {
 
 
         return serverRequest.bodyToMono(TournamentRqDto.class)
+//                .flatMap(managementTournamentUseCase::crearTorneo)
                 .flatMap(dto -> ServerResponse.ok().bodyValue(dto));
     }
 

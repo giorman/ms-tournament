@@ -12,10 +12,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataDto {
-    private OwnerDto owner;
-    private CategoryDto category;
+
     private String name;
     private String description;
+    private String game;
+    private OrganizerDto owner;
+    private CategoryDto category;
     private Date eventDate;
     private StatusDto status;
 }

@@ -1,4 +1,4 @@
 package co.com.esport.app.model.gestiontorneo.gateways;
 
-public interface GestionTorneoRepository {
+public interface ManagementTournamentRepository {
 }
