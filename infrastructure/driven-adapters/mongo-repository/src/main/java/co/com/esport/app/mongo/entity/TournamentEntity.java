@@ -1,19 +1,22 @@
-package co.com.esport.app.model.gestiontorneo.request;
-import lombok.Builder;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-//import lombok.NoArgsConstructor;
-import lombok.Setter;
+package co.com.esport.app.mongo.entity;
+
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
+
+
+@Document(collection = "torneos")
 @Getter
 @Setter
-//@NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
-public class TournamentRq {
+@NoArgsConstructor
+public class TournamentEntity {
 
+    @Id
+    private String id;
     private String messageId;
     private String name;
     private String description;
@@ -22,4 +25,5 @@ public class TournamentRq {
     private String status;
     private Date startDate;
     private String idCategory;
+
 }

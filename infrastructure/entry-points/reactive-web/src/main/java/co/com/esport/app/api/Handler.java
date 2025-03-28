@@ -20,13 +20,9 @@ public class Handler {
 
     public Mono<ServerResponse> crearTorneo(ServerRequest serverRequest) {
 
-
-        //recibe el objeto de la petición y lo mapea a un objeto de tipo TournamentRqDto y lo retorna.
-
-
         return serverRequest.bodyToMono(TournamentRqDto.class)
                 .map(dto -> mapper.mapToTournamentRq(dto , serverRequest))
-                .flatMap(ManagementTournamentUseCase::crearTorneo)
+                .flatMap(managementTournamentUseCase::crearTorneo)
                 .flatMap(dto -> ServerResponse.ok().bodyValue(dto));
     }
 
