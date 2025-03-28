@@ -1,9 +1,12 @@
 package co.com.esport.app.api.utilities;
 
 
+import co.com.esport.app.api.dtos.commons.MetaDTO;
 import co.com.esport.app.api.dtos.request.Status;
 import co.com.esport.app.api.dtos.request.TournamentRqDto;
+import co.com.esport.app.api.dtos.response.CreateTournamentRsDTO;
 import co.com.esport.app.model.gestiontorneo.request.TournamentRq;
+import co.com.esport.app.model.gestiontorneo.response.CreateTournamentRs;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 
@@ -28,19 +31,34 @@ public class Mapper {
                 .startDate(tournamentRqDto.getData().getStartDate())
                 .endDate(tournamentRqDto.getData().getEndDate())
                 .category(tournamentRqDto.getData().getCategory())
-                .prizes(mapPrizes(tournamentRqDto.getData().getPrizes()))
+                .prizes(mapToPrizes(tournamentRqDto.getData().getPrizes()))
                 .salesStages(mapToSalesStages(tournamentRqDto.getData().getSalesStages()))
                 .build();
     }
 
-    private ArrayList<TournamentRq.Prizes> mapPrizes(List<TournamentRqDto.Data.Prizes> prizes) {
+    public CreateTournamentRsDTO mapToCreateTournamentRsDTO(CreateTournamentRs createTournamentRs, ServerRequest.Headers headers , String requestDateTime) {
+        return CreateTournamentRsDTO.builder()
+                .meta(MetaDTO.builder()
+                        .messageId(headers.firstHeader("message-id"))
+                        .requestDateTime(requestDateTime)
+                        .build())
+                .data(CreateTournamentRsDTO.Data.builder()
+                        .idTournament(createTournamentRs.getIdTournament())
+                        .nameTournament(createTournamentRs.getNameTournament())
+                        .build())
+                .build();
+
+    }
+
+
+    private ArrayList<TournamentRq.Prizes> mapToPrizes(List<TournamentRqDto.Data.Prizes> prizes) {
         return prizes.stream()
                 .map(prize -> new TournamentRq.Prizes(prize.getPrize()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     //metodo para mapear de lista SaleStageDTO a lista SaleStage
-    public ArrayList<TournamentRq.SalesStages> mapToSalesStages(List<TournamentRqDto.Data.SalesStages> salesStages){
+    private ArrayList<TournamentRq.SalesStages> mapToSalesStages(List<TournamentRqDto.Data.SalesStages> salesStages){
         return salesStages.stream()
                 .map(saleStage -> TournamentRq.SalesStages.builder()
                         .stageName(saleStage.getStageName())

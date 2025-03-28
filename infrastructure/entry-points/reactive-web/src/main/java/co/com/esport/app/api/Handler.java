@@ -10,6 +10,9 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+import java.time.Instant;
+
 @Component
 @RequiredArgsConstructor
 public class Handler {
@@ -19,11 +22,12 @@ public class Handler {
 //private  final UseCase2 useCase2;
 
     public Mono<ServerResponse> crearTorneo(ServerRequest serverRequest) {
-
+        String requestDateTime = Instant.now().toString();
         return serverRequest.bodyToMono(TournamentRqDto.class)
                 .map(dto -> mapper.mapToTournamentRq(dto , serverRequest))
                 .flatMap(managementTournamentUseCase::crearTorneo)
-                .flatMap(dto -> ServerResponse.ok().bodyValue(dto));
+                .flatMap(dto -> Mono.just(mapper.mapToCreateTournamentRsDTO(dto, serverRequest.headers(), requestDateTime)))
+                .flatMap(response -> ServerResponse.created(URI.create("/v1/api/ms-tournament/create/".concat(response.getData().getIdTournament()))).bodyValue(response));
     }
 
     public Mono<ServerResponse> listenGETOtherUseCase(ServerRequest serverRequest) {

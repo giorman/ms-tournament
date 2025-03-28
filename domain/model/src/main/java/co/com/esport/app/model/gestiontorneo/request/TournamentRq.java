@@ -12,6 +12,7 @@ import java.util.Date;
 @Builder(toBuilder = true)
 public class TournamentRq {
 
+    private String id;
     private String messageId;
     private String name;
     private String game;
