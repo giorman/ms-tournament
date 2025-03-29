@@ -13,7 +13,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class RouterRest {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(POST("/v1/api/ms-tournament/create"), handler::crearTorneo)
+        return route(POST("/v1/api/ms-tournament/create"), handler::createTournament)
                 .andRoute(POST("/api/usecase/otherpath"), handler::listenPOSTUseCase)
                 .and(route(GET("/api/otherusercase/path"), handler::listenGETOtherUseCase));
     }
