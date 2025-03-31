@@ -2,10 +2,7 @@ package co.com.esport.app.api.dtos.request;
 
 
 import co.com.esport.app.model.gestiontorneo.utils.Status;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +11,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TournamentRqDto {
 
     private Data data;
@@ -23,6 +21,7 @@ public class TournamentRqDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @lombok.Data
+    @Builder
     public static class Data {
 
         private String tournamentName;
@@ -34,9 +33,19 @@ public class TournamentRqDto {
         private ArrayList<SalesStages> salesStages;
         private Date startDate;
         private Date endDate;
-        private Data.OrganizerDto organizer;
+        private OrganizerDto organizer;
         private Status status;
+        private Number numberPlayers;
+        private ArrayList<Cordinator> cordinator;
+        private Boolean free;
 
+
+        @lombok.Data
+        public static class Cordinator {
+
+            private String id;
+
+        }
 
         @lombok.Data
         public static class OrganizerDto {
@@ -44,6 +53,7 @@ public class TournamentRqDto {
             private String id;
 
         }
+
 
         @lombok.Data
         public static class Prizes {

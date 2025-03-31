@@ -1,7 +1,5 @@
 package co.com.esport.app.model.gestiontorneo.exception.model;
 
-import co.com.esport.app.model.gestiontorneo.exception.model.CodeMessage;
-import co.com.esport.app.model.gestiontorneo.exception.model.ErrorManagment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,6 +16,22 @@ public enum ConstantException implements ErrorManagment {
             CodeMessage.BODY_DATA_REQUIRED),
     STATUS_ERROR(
             CodeMessage.STATUS_INVALID),
+    SALES_STAGES_NULL(
+            CodeMessage.SALES_STAGES_INVALID),
+    CREATE_ERROR(
+            CodeMessage.CREATE_BD_ERROR),
+    TOURNEY_LIMIT_EXCEEDED(
+            CodeMessage.FREE_LIMIT_EXCEEDED),
+    CORDINATOR_LIMIT_EXCEEDED(
+            CodeMessage.COORDINATOR_LIMIT),
+    PRIZES_LIMIT_EXCEEDED(
+            CodeMessage.PRIZES_LIMIT),
+    SALESSTAGES_LIMIT_EXCEEDED(
+            CodeMessage.SALESSTAGES_LIMIT),
+    PLATFORM_ERROR(
+            CodeMessage.PLATFORM_INVALID),
+    PLAYERS_LIMIT_EXCEEDED(
+            CodeMessage.PLAYERS_LIMIT),
     CATEGORY_INVALID(
             CodeMessage.CATEGORY_NOT_FOUND);
 

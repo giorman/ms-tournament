@@ -26,12 +26,8 @@ public class MongoRepositoryTournamentAdapter extends AdapterOperations<Tourname
 
 
     @Override
-    public Mono<TournamentRq> findByName(String name) {
-        return repository.findByName(name)
-                .doOnNext(entity ->{
-                    System.out.println("Entity found: " + entity.getIdOrganizer());
-                })
-
-                .map(entity -> mapper.map(entity, TournamentRq.class));
+    public Mono<Long> countByStatusAndFreeAndIdOrganizer(String status, boolean free, String idOrganizer) {
+        return repository.countByStatusAndFreeAndIdOrganizer(status, free, idOrganizer);
     }
+
 }

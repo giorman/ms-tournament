@@ -10,4 +10,6 @@ import java.nio.channels.FileChannel;
 
 public interface MongoDBTournamentRepository extends ReactiveMongoRepository<TournamentEntity/* change for adapter model */, String>, ReactiveQueryByExampleExecutor<TournamentEntity/* change for adapter model */> {
     Mono<TournamentEntity> findByName(String name);
+
+    Mono<Long> countByStatusAndFreeAndIdOrganizer(String status, boolean free, String idOrganizer);
 }

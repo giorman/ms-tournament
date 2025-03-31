@@ -4,13 +4,12 @@ import co.com.esport.app.model.gestiontorneo.exception.BusinessException;
 import co.com.esport.app.model.gestiontorneo.exception.model.ConstantException;
 import co.com.esport.app.model.gestiontorneo.gateways.bd.ManagementCategoryRepository;
 import co.com.esport.app.model.gestiontorneo.gateways.bd.ManagementTournamentRepository;
-import co.com.esport.app.model.gestiontorneo.request.Category;
 import co.com.esport.app.model.gestiontorneo.request.TournamentRq;
 import co.com.esport.app.model.gestiontorneo.response.CreateTournamentRs;
+import co.com.esport.app.model.gestiontorneo.utils.Platform;
 import co.com.esport.app.model.gestiontorneo.utils.Status;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
-
 
 @RequiredArgsConstructor
 public class ManagementTournamentUseCase {
@@ -19,20 +18,39 @@ public class ManagementTournamentUseCase {
     private final ManagementCategoryRepository managementCategoryRepository;
 
 
-    //se crea el metodo para crear un tor neorcggddggdddaloh
+    //se crea el metodo para crear un torneo
     public Mono<CreateTournamentRs> createTournament(TournamentRq tournamentRq) {
 
         isValidStatus(tournamentRq.getStatus());
-//        isValidCategory(tournamentRq.getCategory());
+        isValidPlatform(tournamentRq.getStreamingPlatform());
+
+        if (!tournamentRq.getFree()) {
+            validatePay(tournamentRq);
+        }
+
+        validateLimitCordinator(tournamentRq);
+        validateLimitPrizes(tournamentRq);
+        validateLimitSalesStages(tournamentRq);
 
         return managementCategoryRepository.findByName(tournamentRq.getCategory())
                 .switchIfEmpty(Mono.error(new BusinessException(ConstantException.CATEGORY_INVALID)))
-                .then(managementTournamentRepository.save(tournamentRq))
-                .doOnNext(tournament -> {
-                    if (tournament.getIdOrganizer() == null) {
-                        throw new RuntimeException("Error al crear el torneo");
+                .flatMap(category -> {
+                    if (tournamentRq.getFree() && category.getCapacity().getPlayers() < tournamentRq.getNumberPlayers().intValue()) {
+                        return Mono.error(new BusinessException(ConstantException.PLAYERS_LIMIT_EXCEEDED));
                     }
+                    return Mono.empty();
                 })
+                .then(managementTournamentRepository.countByStatusAndFreeAndIdOrganizer(Status.ACTIVE.getStatus(), true, tournamentRq.getIdOrganizer()))
+                .flatMap(count -> {
+                    if (count >= 2 && tournamentRq.getFree()) {
+
+                        return Mono.error(new BusinessException(ConstantException.TOURNEY_LIMIT_EXCEEDED));
+                    }
+                        return Mono.empty();
+
+                })
+                .then(managementTournamentRepository.save(tournamentRq))
+                .switchIfEmpty(Mono.error(new BusinessException(ConstantException.CREATE_ERROR)))
                 .map(this::mapToCreateTournamentRs);
     }
 
@@ -41,40 +59,43 @@ public class ManagementTournamentUseCase {
         if (!Status.isValidStatus(status)) {
             throw new BusinessException(ConstantException.STATUS_ERROR);
         }
-
     }
 
-    //metodo que me permita validar si la categoria de la existe en la base de datos
-    public void isValidCategory(String category) {
-        System.out.println("se entro a validar la categoria");
-
-        managementTournamentRepository.save(TournamentRq.builder()
-                        .name("prueba")
-                        .description("descripcion")
-                        .build())
-                .doOnNext(category1 -> {
-                    System.out.println("Torneo encontrada: " + category1.getDescription());
-                })
-                .switchIfEmpty(
-                        Mono.error(new BusinessException(ConstantException.CATEGORY_INVALID))
-                );
-
-        managementCategoryRepository.save(Category.builder()
-                .name("nueva")
-                .description("descripcion")
-                .build());
-
-
-        managementCategoryRepository.findByName(category)
-                .doOnNext(category1 -> {
-                    System.out.println("Categoria encontrada: " + category1.getName());
-                })
-                .switchIfEmpty(
-                        Mono.error(new BusinessException(ConstantException.CATEGORY_INVALID))
-                );
-
+    //metodo para validar si la platform del torneo corresponde a los validos del enum platform
+    public void isValidPlatform(String platform) {
+        if (!Platform.isValidPlatform(platform)) {
+            throw new BusinessException(ConstantException.PLATFORM_ERROR);
+        }
     }
 
+   //metodo para validar si el parametro salesStages es nulo o vacio
+    public void validatePay(TournamentRq tournamentRq) {
+    //validar si salesStages es nulo o vacio
+        if (tournamentRq.getSalesStages() == null || tournamentRq.getSalesStages().isEmpty()) {
+            throw new BusinessException(ConstantException.SALES_STAGES_NULL);
+        }
+    }
+
+    //metodo para validar el limite de coordinadores
+    public void validateLimitCordinator(TournamentRq tournamentRq) {
+        if (tournamentRq.getCordinator() != null && tournamentRq.getCordinator().size() > 2) {
+            throw new BusinessException(ConstantException.CORDINATOR_LIMIT_EXCEEDED);
+        }
+    }
+
+    //metodo para validar el limite de premios
+    public void validateLimitPrizes(TournamentRq tournamentRq) {
+        if (tournamentRq.getPrizes()!= null && tournamentRq.getPrizes().size() > 3) {
+            throw new BusinessException(ConstantException.PRIZES_LIMIT_EXCEEDED);
+        }
+    }
+
+    //metodo para validar el limite de etapas de venta
+    public void validateLimitSalesStages(TournamentRq tournamentRq) {
+        if (tournamentRq.getSalesStages()!= null && tournamentRq.getSalesStages().size() > 3) {
+            throw new BusinessException(ConstantException.SALESSTAGES_LIMIT_EXCEEDED);
+        }
+    }
 
     //se crea el metodo para mapear el torneo
     public CreateTournamentRs mapToCreateTournamentRs(TournamentRq tournamentRq) {
@@ -84,5 +105,17 @@ public class ManagementTournamentUseCase {
                 .nameTournament(tournamentRq.getName())
                 .build();
     }
+
+//    //se crea el metodo para validar validar el limite de pjugadores de torneo gratuitos para esto se consulta en la bd cuanto es la capadica limite de jugadores
+//    public void validateLimitPlayers(TournamentRq tournamentRq) {
+//       managementCategoryRepository.findByName(tournamentRq.getCategory())
+//                .flatMap(category -> {
+//                    if (category.getCapacity().getPlayers() < tournamentRq.getNumberPlayers().intValue()) {
+//                        return Mono.error(new BusinessException(ConstantException.PLAYERS_LIMIT_EXCEEDED));
+//                    }
+//                    return Mono.empty();
+//                });
+//    }
+
 
 }

@@ -2,6 +2,7 @@ package co.com.esport.app.api.utilities;
 
 import co.com.esport.app.model.gestiontorneo.exception.BusinessException;
 import co.com.esport.app.model.gestiontorneo.exception.ContractException;
+import co.com.esport.app.model.gestiontorneo.exception.SystemException;
 import co.com.esport.app.model.gestiontorneo.exception.model.ConstantException;
 import co.com.esport.app.model.gestiontorneo.exception.model.ErrorResponse;
 import co.com.esport.app.model.gestiontorneo.exception.model.MetaDTO;
@@ -44,13 +45,20 @@ public class HandlerExceptionsGlobal extends AbstractErrorWebExceptionHandler {
         Throwable error = super.getError(request);
         HttpStatus status;
         String mensaje;
+        String errorCode = "";
 
         if (error instanceof ContractException) {
             status = HttpStatus.BAD_REQUEST;
             mensaje = error.getMessage();
+            errorCode = "SA".concat(String.valueOf(status.value()));
         } else if (error instanceof BusinessException) {
             status = HttpStatus.CONFLICT;
             mensaje = error.getMessage();
+            errorCode = "BP".concat(String.valueOf(status.value()));
+        }else if (error instanceof SystemException) {
+            status = HttpStatus.BAD_REQUEST;
+            mensaje = error.getMessage();
+            errorCode = "SI".concat(String.valueOf(status.value()));
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             mensaje = ConstantException.UNKNOWN_ERROR.getMessage();
@@ -68,7 +76,7 @@ public class HandlerExceptionsGlobal extends AbstractErrorWebExceptionHandler {
                                         .requestDateTime(requestTime)
                                         .build())
                                 .data(ErrorResponse.Data.builder()
-                                        .errorCode(String.valueOf(status.value()))
+                                        .errorCode(errorCode)
                                         .errorMessage(mensaje)
                                         .build())
                                 .build()));

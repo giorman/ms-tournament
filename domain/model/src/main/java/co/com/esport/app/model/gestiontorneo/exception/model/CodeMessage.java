@@ -3,19 +3,18 @@ package co.com.esport.app.model.gestiontorneo.exception.model;
 public class CodeMessage {
 
     public static final String UNKNOWN_ERROR_DETAIL = "Ha ocurrido un error interno en el servicio";
-    public static final String SUID_AVAILABILITY_DETAIL = "Ha ocurrido un error interno en el servicio";
-    public static final String TRANSACTION_AVAILABILITY_DETAIL = "Ha ocurrido un error interno en el " +
-            "servicio de transacciones";
+    public static final String CREATE_BD_ERROR = "Ha ocurrido un error interno bd creando el registro";
+    public static final String SALES_STAGES_INVALID = "Las etapas de ventas son requeridas";
     public static final String CATEGORY_NOT_FOUND = "La categoria no existe";
     public static final String STATUS_INVALID = "El estado no es valido";
     public static final String INVALID_MESSAGEID = "Faltan cabeceras obligatorias";
     public static final String BODY_DATA_REQUIRED = "Faltan datos obligatorios en el body";
-    public static final String NOT_EXIST_PARAMETER_DETAIL = "No se encuentran resultados para el parámetro consultado";
-    public static final String INVALID_STATUS_ROLE_DETAIL = "Estado de role incorrecto";
-    public static final String INVALID_DATA_DETAIL = "Uno o más datos no poseen un valor válido";
-    public static final String SUID_CONSUMER_DETAIL = "El consumidor no se encuentra registrado";
-    public static final String ROLE_NOT_EXIST_DETAIL = "El rol no existe";
-    public static final String EMPTY_RELATIONSHIP_DETAIL = "No se encuentran registros de relacionamiento.";
+    public static final String FREE_LIMIT_EXCEEDED = "Limite de torneos gratis alcanzado";
+    public static final String COORDINATOR_LIMIT = "El limite maximo de coordinadores alcanzado";
+    public static final String PRIZES_LIMIT = "El limite maximo de premios alcanzado";
+    public static final String SALESSTAGES_LIMIT = "El limite maximo de etapas alcanzado";
+    public static final String PLAYERS_LIMIT = "El limite maximo de jugadores alcanzado";
+    public static final String PLATFORM_INVALID = "La plataforma no es valida";
     public static final String NOT_PRIVILEGES_DETAIL = "No cuenta con los permisos para ejecutar la acción.";
     public static final String INVALID_ROLE_DETAIL = "Rol inválido.";
     public static final String PRIVILEGE_NOT_EXISTS_DETAIL = "Privilegio no existe";

@@ -23,9 +23,10 @@ public class CategoryEntity {
     private Capacity capacity;
 
     @Data
-    private static class   Capacity{
+    @Getter
+    private static class Capacity{
         private int visualizers;
-        private int participants;
+        private int players;
     }
 
 

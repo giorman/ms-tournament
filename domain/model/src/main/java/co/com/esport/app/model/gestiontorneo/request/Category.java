@@ -16,9 +16,10 @@ public class Category {
     private Capacity capacity;
 
     @Data
-    private static class   Capacity{
+    public static class Capacity{
         private int visualizers;
-        private int participants;
+        private int players;
+
     }
 
 

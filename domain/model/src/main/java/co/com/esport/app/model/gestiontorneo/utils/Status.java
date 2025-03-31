@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public enum Status {
 
-    ACTIVE("ACTIVE"),
-    INACTIVE("INACTIVE");
+    ACTIVE("active"),
+    INACTIVE("inactive"),
+    DELETED("deleted"),;
 
     private String status;
 

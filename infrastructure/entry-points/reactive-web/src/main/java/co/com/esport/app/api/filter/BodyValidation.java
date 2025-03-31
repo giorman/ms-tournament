@@ -14,7 +14,6 @@ public class BodyValidation {
     public Mono<TournamentRqDto> BodyCreate(TournamentRqDto request) {
         return Mono.just(request)
                 .doOnNext(this::validateFields)
-
                 .map(tournamentRqDto -> request);
     }
 
@@ -30,10 +29,11 @@ public class BodyValidation {
                 isNullOrEmpty(data.getCategory()) ||
                 isNullOrEmpty(data.getStreamingPlatform()) ||
                 data.getPrizes() == null || data.getPrizes().isEmpty() ||
-                data.getSalesStages() == null || data.getSalesStages().isEmpty() ||
                 data.getStartDate() == null ||
                 data.getEndDate() == null ||
                 data.getOrganizer() == null ||
+                data.getFree() == null ||
+                data.getNumberPlayers() == null ||
                 isNullOrEmpty(data.getOrganizer().getId())) {
             throw new ContractException(ConstantException.DATA_ERROR);
         }
