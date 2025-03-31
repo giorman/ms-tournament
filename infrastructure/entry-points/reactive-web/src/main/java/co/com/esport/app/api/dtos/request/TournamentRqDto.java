@@ -1,6 +1,7 @@
 package co.com.esport.app.api.dtos.request;
 
 
+import co.com.esport.app.model.gestiontorneo.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

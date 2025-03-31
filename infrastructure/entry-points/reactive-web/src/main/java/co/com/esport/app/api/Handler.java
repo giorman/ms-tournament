@@ -31,7 +31,7 @@ public class Handler {
                 .flatMap(dto -> headersValidation.validateHeaders(serverRequest)
                         .then(Mono.just(dto)))
                 .map(dto -> mapper.mapToTournamentRq(dto, serverRequest))
-                .flatMap(managementTournamentUseCase::crearTorneo)
+                .flatMap(managementTournamentUseCase::createTournament)
                 .flatMap(dto -> Mono.just(mapper.mapToCreateTournamentRsDTO(dto, serverRequest.headers(), requestDateTime)))
                 .flatMap(response -> ServerResponse.created(URI.create("/v1/api/ms-tournament/create/".concat(response.getData().getIdTournament()))).bodyValue(response));
     }

@@ -1,7 +1,7 @@
 package co.com.esport.app.api.filter;
 
 
-import co.com.esport.app.model.gestiontorneo.exception.ConstantException;
+import co.com.esport.app.model.gestiontorneo.exception.model.ConstantException;
 import co.com.esport.app.model.gestiontorneo.exception.ContractException;
 import co.com.esport.app.model.gestiontorneo.utils.Constants;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,7 @@ public class HeadersValidation {
         if (!validateUUID(messageId) || messageId == null || messageId.isBlank()) {
             return Mono.error(() -> new ContractException(ConstantException.MESSAGEID_ERROR));
         }
+
      return Mono.empty();
 
     }
@@ -27,7 +28,4 @@ public class HeadersValidation {
         return uuid != null && Constants.REGEX_UUID_PATTERN.matcher(uuid).matches();
     }
 
-    private boolean validationAid(String alias) {
-        return alias != null && Constants.REGEX_AID_PATTERN.matcher(alias).matches();
-    }
 }

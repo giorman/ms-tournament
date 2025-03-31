@@ -2,11 +2,11 @@ package co.com.esport.app.api.utilities;
 
 
 import co.com.esport.app.api.dtos.commons.MetaDTO;
-import co.com.esport.app.api.dtos.request.Status;
 import co.com.esport.app.api.dtos.request.TournamentRqDto;
 import co.com.esport.app.api.dtos.response.CreateTournamentRsDTO;
 import co.com.esport.app.model.gestiontorneo.request.TournamentRq;
 import co.com.esport.app.model.gestiontorneo.response.CreateTournamentRs;
+import co.com.esport.app.model.gestiontorneo.utils.Status;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 

@@ -1,5 +1,7 @@
 package co.com.esport.app.model.gestiontorneo.exception;
 
+import co.com.esport.app.model.gestiontorneo.exception.model.ConstantException;
+
 public class ContractException extends RuntimeException{
 
     public ContractException(ConstantException message) {

@@ -1,4 +1,4 @@
-package co.com.esport.app.model.gestiontorneo.exception;
+package co.com.esport.app.model.gestiontorneo.exception.model;
 
 import co.com.esport.app.model.gestiontorneo.exception.model.CodeMessage;
 import co.com.esport.app.model.gestiontorneo.exception.model.ErrorManagment;
@@ -15,7 +15,11 @@ public enum ConstantException implements ErrorManagment {
     MESSAGEID_ERROR(
             CodeMessage.INVALID_MESSAGEID),
     DATA_ERROR(
-            CodeMessage.BODY_DATA_REQUIRED);
+            CodeMessage.BODY_DATA_REQUIRED),
+    STATUS_ERROR(
+            CodeMessage.STATUS_INVALID),
+    CATEGORY_INVALID(
+            CodeMessage.CATEGORY_NOT_FOUND);
 
     private final String message;
 

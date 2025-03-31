@@ -1,4 +1,4 @@
-package co.com.esport.app.api.dtos.request;
+package co.com.esport.app.model.gestiontorneo.utils;
 
 
 import lombok.AllArgsConstructor;

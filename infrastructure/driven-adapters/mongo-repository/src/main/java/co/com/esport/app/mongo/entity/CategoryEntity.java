@@ -9,27 +9,26 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-
-@Document(collection = "tournament")
+@Document(collection = "category")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TournamentEntity {
+public class CategoryEntity {
 
     @Id
     private String id;
     private String name;
     private String description;
-    private String game;
-    private String idOrganizer;
-    private String streamingPlatform;
-    private String status;
-    private Date startDate;
-    private Date endDate;
-    private String category;
-    private ArrayList<TournamentRq.Prizes> prizes;
-    private ArrayList<TournamentRq.SalesStages> salesStages;
+    private Capacity capacity;
+
+    @Data
+    private static class   Capacity{
+        private int visualizers;
+        private int participants;
+    }
+
+
 
 
 }

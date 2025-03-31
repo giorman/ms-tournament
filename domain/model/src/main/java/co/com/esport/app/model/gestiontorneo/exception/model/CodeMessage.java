@@ -6,8 +6,8 @@ public class CodeMessage {
     public static final String SUID_AVAILABILITY_DETAIL = "Ha ocurrido un error interno en el servicio";
     public static final String TRANSACTION_AVAILABILITY_DETAIL = "Ha ocurrido un error interno en el " +
             "servicio de transacciones";
-    public static final String GET_ROLE_CAPABILITIES_DETAIL = "Ha ocurrido un error interno en el servicio";
-    public static final String GET_NAME_DIRECTORY_DETAIL = "Ha ocurrido un error interno en el servicio";
+    public static final String CATEGORY_NOT_FOUND = "La categoria no existe";
+    public static final String STATUS_INVALID = "El estado no es valido";
     public static final String INVALID_MESSAGEID = "Faltan cabeceras obligatorias";
     public static final String BODY_DATA_REQUIRED = "Faltan datos obligatorios en el body";
     public static final String NOT_EXIST_PARAMETER_DETAIL = "No se encuentran resultados para el parámetro consultado";

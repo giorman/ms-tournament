@@ -1,7 +1,7 @@
 package co.com.esport.app.api.filter;
 
 import co.com.esport.app.api.dtos.request.TournamentRqDto;
-import co.com.esport.app.model.gestiontorneo.exception.ConstantException;
+import co.com.esport.app.model.gestiontorneo.exception.model.ConstantException;
 import co.com.esport.app.model.gestiontorneo.exception.ContractException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
