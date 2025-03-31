@@ -2,11 +2,11 @@ package co.com.esport.app.api.utilities;
 
 
 import co.com.esport.app.api.dtos.commons.MetaDTO;
-import co.com.esport.app.api.dtos.request.Status;
 import co.com.esport.app.api.dtos.request.TournamentRqDto;
 import co.com.esport.app.api.dtos.response.CreateTournamentRsDTO;
 import co.com.esport.app.model.gestiontorneo.request.TournamentRq;
 import co.com.esport.app.model.gestiontorneo.response.CreateTournamentRs;
+import co.com.esport.app.model.gestiontorneo.utils.Status;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 
@@ -30,9 +30,12 @@ public class Mapper {
                 .status(Status.ACTIVE.getStatus())
                 .startDate(tournamentRqDto.getData().getStartDate())
                 .endDate(tournamentRqDto.getData().getEndDate())
-                .category(tournamentRqDto.getData().getCategory())
+                .category(tournamentRqDto.getData().getCategory().toUpperCase())
                 .prizes(mapToPrizes(tournamentRqDto.getData().getPrizes()))
-                .salesStages(mapToSalesStages(tournamentRqDto.getData().getSalesStages()))
+                .salesStages(tournamentRqDto.getData().getSalesStages() != null && !tournamentRqDto.getData().getSalesStages().isEmpty() ? mapToSalesStages(tournamentRqDto.getData().getSalesStages()) : new ArrayList<>())
+                .cordinator(mapToCordinators(tournamentRqDto.getData().getCordinator()))
+                .free(tournamentRqDto.getData().getFree())
+                .numberPlayers(tournamentRqDto.getData().getNumberPlayers())
                 .build();
     }
 
@@ -47,7 +50,6 @@ public class Mapper {
                         .nameTournament(createTournamentRs.getNameTournament())
                         .build())
                 .build();
-
     }
 
 
@@ -65,6 +67,14 @@ public class Mapper {
                         .startDate(saleStage.getStartDate())
                         .endDate(saleStage.getEndDate())
                         .price(saleStage.getPrice())
+                        .build())
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private ArrayList<TournamentRq.Cordinator> mapToCordinators(List<TournamentRqDto.Data.Cordinator> cordinators) {
+        return cordinators.stream()
+                .map(cordinator -> TournamentRq.Cordinator.builder()
+                        .id(cordinator.getId())
                         .build())
                 .collect(Collectors.toCollection(ArrayList::new));
     }

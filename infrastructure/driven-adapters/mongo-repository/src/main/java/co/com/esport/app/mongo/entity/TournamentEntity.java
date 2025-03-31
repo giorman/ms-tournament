@@ -10,7 +10,7 @@ import java.util.Date;
 
 
 
-@Document(collection = "torneos")
+@Document(collection = "tournament")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -30,6 +30,11 @@ public class TournamentEntity {
     private String category;
     private ArrayList<TournamentRq.Prizes> prizes;
     private ArrayList<TournamentRq.SalesStages> salesStages;
+    private Number numberPlayers;
+    private ArrayList<TournamentRq.Cordinator> cordinator;
+    private Boolean free;
+
+
 
 
 }

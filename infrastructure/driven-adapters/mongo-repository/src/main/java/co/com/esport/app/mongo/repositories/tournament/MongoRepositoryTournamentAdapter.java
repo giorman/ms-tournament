@@ -1,6 +1,7 @@
-package co.com.esport.app.mongo;
+package co.com.esport.app.mongo.repositories.tournament;
 
-import co.com.esport.app.model.gestiontorneo.gateways.ManagementTournamentRepository;
+import co.com.esport.app.model.gestiontorneo.gateways.bd.ManagementTournamentRepository;
+import co.com.esport.app.model.gestiontorneo.request.Category;
 import co.com.esport.app.model.gestiontorneo.request.TournamentRq;
 import co.com.esport.app.mongo.entity.TournamentEntity;
 import co.com.esport.app.mongo.helper.AdapterOperations;
@@ -9,12 +10,12 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 @Repository
-public class MongoRepositoryAdapter extends AdapterOperations<TournamentRq/* change for domain model */, TournamentEntity/* change for adapter model */, String, MongoDBRepository> implements ManagementTournamentRepository
+public class MongoRepositoryTournamentAdapter extends AdapterOperations<TournamentRq/* change for domain model */, TournamentEntity/* change for adapter model */, String, MongoDBTournamentRepository> implements ManagementTournamentRepository
 
 // implements ModelRepository from domain
 {
 
-    public MongoRepositoryAdapter(MongoDBRepository repository, ObjectMapper mapper) {
+    public MongoRepositoryTournamentAdapter(MongoDBTournamentRepository repository, ObjectMapper mapper) {
         /**
          *  Could be use mapper.mapBuilder if your domain model implement builder pattern
          *  super(repository, mapper, d -> mapper.mapBuilder(d,ObjectModel.ObjectModelBuilder.class).build());
@@ -24,5 +25,9 @@ public class MongoRepositoryAdapter extends AdapterOperations<TournamentRq/* cha
     }
 
 
+    @Override
+    public Mono<Long> countByStatusAndFreeAndIdOrganizer(String status, boolean free, String idOrganizer) {
+        return repository.countByStatusAndFreeAndIdOrganizer(status, free, idOrganizer);
+    }
 
 }

@@ -1,13 +1,12 @@
 package co.com.esport.app.mongo.helper;
 
-import co.com.esport.app.mongo.MongoDBRepository;
-import co.com.esport.app.mongo.MongoRepositoryAdapter;
+import co.com.esport.app.mongo.repositories.tournament.MongoDBTournamentRepository;
+import co.com.esport.app.mongo.repositories.tournament.MongoRepositoryTournamentAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.reactivecommons.utils.ObjectMapper;
-import org.springframework.data.domain.Example;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -18,12 +17,12 @@ import static org.mockito.Mockito.when;
 class AdapterOperationsTest {
 
     @Mock
-    private MongoDBRepository repository;
+    private MongoDBTournamentRepository repository;
 
     @Mock
     private ObjectMapper objectMapper;
 
-    private MongoRepositoryAdapter adapter;
+    private MongoRepositoryTournamentAdapter adapter;
 
     private Object entity;
     private Flux<Object> entities;
@@ -34,7 +33,7 @@ class AdapterOperationsTest {
 
         when(objectMapper.map("value", Object.class)).thenReturn("value");
 
-        adapter = new MongoRepositoryAdapter(repository, objectMapper);
+        adapter = new MongoRepositoryTournamentAdapter(repository, objectMapper);
 
         entity = "value";
         entities = Flux.just(entity);

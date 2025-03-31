@@ -11,5 +11,4 @@ import lombok.*;
 public class CreateTournamentRs {
     private String idTournament;
     private String nameTournament;
-
 }

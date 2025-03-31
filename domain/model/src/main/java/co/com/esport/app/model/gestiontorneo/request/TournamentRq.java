@@ -1,4 +1,5 @@
 package co.com.esport.app.model.gestiontorneo.request;
+import jdk.jshell.Snippet;
 import lombok.*;
 //import lombok.NoArgsConstructor;
 
@@ -25,7 +26,19 @@ public class TournamentRq {
     private String category;
     private ArrayList<Prizes> prizes;
     private ArrayList<SalesStages> salesStages;
+    private Number numberPlayers;
+    private ArrayList<Cordinator> cordinator;
+    private Boolean free;
 
+
+    @lombok.Data
+    @Builder
+    public static class Cordinator {
+
+        private String id;
+
+
+    }
 
 
     @lombok.Data
