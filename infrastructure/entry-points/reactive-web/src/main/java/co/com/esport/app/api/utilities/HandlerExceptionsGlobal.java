@@ -62,6 +62,7 @@ public class HandlerExceptionsGlobal extends AbstractErrorWebExceptionHandler {
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             mensaje = ConstantException.UNKNOWN_ERROR.getMessage();
+            errorCode = "SP".concat(String.valueOf(status.value()));
         }
 
         String messageId = request.attribute("message-id").orElse("default-message-id").toString();
@@ -75,9 +76,9 @@ public class HandlerExceptionsGlobal extends AbstractErrorWebExceptionHandler {
                                         .messageId(messageId)
                                         .requestDateTime(requestTime)
                                         .build())
-                                .data(ErrorResponse.Data.builder()
-                                        .errorCode(errorCode)
-                                        .errorMessage(mensaje)
+                                .error(ErrorResponse.Error.builder()
+                                        .code(errorCode)
+                                        .message(mensaje)
                                         .build())
                                 .build()));
     }

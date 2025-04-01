@@ -9,8 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class MetaDTO {
-    @JsonProperty("_messageId")
     private String messageId;
-    @JsonProperty("_requestDateTime")
     private String requestDateTime;
 }

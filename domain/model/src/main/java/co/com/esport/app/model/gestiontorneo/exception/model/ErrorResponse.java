@@ -10,13 +10,13 @@ import lombok.Setter;
 public class ErrorResponse {
 
     private MetaDTO meta;
-    private Data data;
+    private Error error;
 
     @lombok.Data
     @Builder
-    public static class Data {
-        private String errorCode;
-        private String errorMessage;
+    public static class Error {
+        private String code;
+        private String message;
     }
 }
 

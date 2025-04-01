@@ -30,4 +30,5 @@ public class MongoRepositoryTournamentAdapter extends AdapterOperations<Tourname
         return repository.countByStatusAndFreeAndIdOrganizer(status, free, idOrganizer);
     }
 
+
 }

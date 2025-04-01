@@ -32,6 +32,8 @@ public enum ConstantException implements ErrorManagment {
             CodeMessage.PLATFORM_INVALID),
     PLAYERS_LIMIT_EXCEEDED(
             CodeMessage.PLAYERS_LIMIT),
+    TOURNAMENT_NOT_FOUND(
+            CodeMessage.TOURNAMENT_NOT_FOUND),
     CATEGORY_INVALID(
             CodeMessage.CATEGORY_NOT_FOUND);
 

@@ -11,6 +11,7 @@ import co.com.esport.app.model.gestiontorneo.utils.Status;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
+
 @RequiredArgsConstructor
 public class ManagementTournamentUseCase {
 
@@ -21,7 +22,7 @@ public class ManagementTournamentUseCase {
     //se crea el metodo para crear un torneo
     public Mono<CreateTournamentRs> createTournament(TournamentRq tournamentRq) {
 
-        isValidStatus(tournamentRq.getStatus());
+        tournamentRq.setStatus(Status.ACTIVE.getStatus());
         isValidPlatform(tournamentRq.getStreamingPlatform());
 
         if (!tournamentRq.getFree()) {
@@ -33,7 +34,7 @@ public class ManagementTournamentUseCase {
         validateLimitSalesStages(tournamentRq);
 
         return managementCategoryRepository.findByName(tournamentRq.getCategory())
-                .switchIfEmpty(Mono.error(new BusinessException(ConstantException.CATEGORY_INVALID)))
+                .switchIfEmpty(Mono.error(new BusinessException(ConstantException.CATEGORY_INVALID)))// Simulate a delay of 2 seconds
                 .flatMap(category -> {
                     if (tournamentRq.getFree() && category.getCapacity().getPlayers() < tournamentRq.getNumberPlayers().intValue()) {
                         return Mono.error(new BusinessException(ConstantException.PLAYERS_LIMIT_EXCEEDED));
@@ -52,6 +53,68 @@ public class ManagementTournamentUseCase {
                 .then(managementTournamentRepository.save(tournamentRq))
                 .switchIfEmpty(Mono.error(new BusinessException(ConstantException.CREATE_ERROR)))
                 .map(this::mapToCreateTournamentRs);
+    }
+
+
+    public Mono<CreateTournamentRs> updateTournament(TournamentRq tournamentRq) {
+
+        isValidStatus(tournamentRq.getStatus());
+        isValidPlatform(tournamentRq.getStreamingPlatform());
+
+        if (!tournamentRq.getFree()) {
+            validatePay(tournamentRq);
+        }
+        validateLimitCordinator(tournamentRq);
+        validateLimitPrizes(tournamentRq);
+        validateLimitSalesStages(tournamentRq);
+
+
+        return managementTournamentRepository.findById(tournamentRq.getId())
+                .switchIfEmpty(Mono.error(new BusinessException(ConstantException.TOURNAMENT_NOT_FOUND)))
+                .map(existingTournament -> {
+                    // Verificar si el torneo ya existe
+                    if (existingTournament == null) {
+                        throw new BusinessException(ConstantException.TOURNAMENT_NOT_FOUND);
+                    }
+                    return existingTournament;
+                })
+                .flatMap(existingTournament -> managementCategoryRepository.findByName(tournamentRq.getCategory())
+                        .switchIfEmpty(Mono.error(new BusinessException(ConstantException.CATEGORY_INVALID)))
+                        .flatMap(category -> {
+                            if (tournamentRq.getFree() && category.getCapacity().getPlayers() < tournamentRq.getNumberPlayers().intValue()) {
+                                return Mono.error(new BusinessException(ConstantException.PLAYERS_LIMIT_EXCEEDED));
+                            }
+                            return Mono.just(existingTournament);
+                        })
+                        .flatMap(existingTournament3 -> managementTournamentRepository.countByStatusAndFreeAndIdOrganizer(Status.ACTIVE.getStatus(), true, tournamentRq.getIdOrganizer())
+                                .flatMap(count -> {
+                                    if (count >= 2 && tournamentRq.getFree()) {
+                                        return Mono.error(new BusinessException(ConstantException.TOURNEY_LIMIT_EXCEEDED));
+                                    }
+                                    return Mono.just(existingTournament3);
+                                })
+                        )
+                        .flatMap(existingTournament2 -> {
+                            // Actualizar el torneo existente con los nuevos datos
+                            existingTournament.setName(tournamentRq.getName());
+                            existingTournament.setDescription(tournamentRq.getDescription());
+                            existingTournament.setGame(tournamentRq.getGame());
+                            existingTournament.setCategory(tournamentRq.getCategory());
+                            existingTournament.setStreamingPlatform(tournamentRq.getStreamingPlatform());
+                            existingTournament.setPrizes(tournamentRq.getPrizes());
+                            existingTournament.setStartDate(tournamentRq.getStartDate());
+                            existingTournament.setEndDate(tournamentRq.getEndDate());
+                            existingTournament.setFree(tournamentRq.getFree());
+                            existingTournament.setNumberPlayers(tournamentRq.getNumberPlayers());
+                            existingTournament.setStatus(tournamentRq.getStatus());
+                            existingTournament.setSalesStages(tournamentRq.getSalesStages());
+                            existingTournament.setCordinator(tournamentRq.getCordinator());
+
+                            return managementTournamentRepository.save(existingTournament2);
+                        })
+                        .switchIfEmpty(Mono.error(new BusinessException(ConstantException.CREATE_ERROR)))
+                        .map(this::mapToCreateTournamentRs)
+                );
     }
 
     //metodo que me permita validar si el estado del torneo coresponde a los validos del enum status
@@ -106,16 +169,6 @@ public class ManagementTournamentUseCase {
                 .build();
     }
 
-//    //se crea el metodo para validar validar el limite de pjugadores de torneo gratuitos para esto se consulta en la bd cuanto es la capadica limite de jugadores
-//    public void validateLimitPlayers(TournamentRq tournamentRq) {
-//       managementCategoryRepository.findByName(tournamentRq.getCategory())
-//                .flatMap(category -> {
-//                    if (category.getCapacity().getPlayers() < tournamentRq.getNumberPlayers().intValue()) {
-//                        return Mono.error(new BusinessException(ConstantException.PLAYERS_LIMIT_EXCEEDED));
-//                    }
-//                    return Mono.empty();
-//                });
-//    }
 
 
 }

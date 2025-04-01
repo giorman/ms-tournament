@@ -14,7 +14,6 @@ import java.util.Date;
 public class TournamentRq {
 
     private String id;
-    private String messageId;
     private String name;
     private String game;
     private String description;
@@ -26,25 +25,26 @@ public class TournamentRq {
     private String category;
     private ArrayList<Prizes> prizes;
     private ArrayList<SalesStages> salesStages;
-    private Number numberPlayers;
+    private Integer numberPlayers;
     private ArrayList<Cordinator> cordinator;
     private Boolean free;
 
 
     @lombok.Data
+    @AllArgsConstructor
     @Builder
     public static class Cordinator {
 
         private String id;
-
-
     }
 
 
     @lombok.Data
     @AllArgsConstructor
+    @Builder
     public static class Prizes {
 
+        private int position;
         private String prize;
 
     }

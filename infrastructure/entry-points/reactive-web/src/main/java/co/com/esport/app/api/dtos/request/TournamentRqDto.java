@@ -1,7 +1,5 @@
 package co.com.esport.app.api.dtos.request;
 
-
-import co.com.esport.app.model.gestiontorneo.utils.Status;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -24,6 +22,7 @@ public class TournamentRqDto {
     @Builder
     public static class Data {
 
+        private String id;
         private String tournamentName;
         private String description;
         private String game;
@@ -33,14 +32,17 @@ public class TournamentRqDto {
         private ArrayList<SalesStages> salesStages;
         private Date startDate;
         private Date endDate;
-        private OrganizerDto organizer;
-        private Status status;
-        private Number numberPlayers;
+        private Organizer organizer;
+        private String status;
+        private Integer numberPlayers;
         private ArrayList<Cordinator> cordinator;
         private Boolean free;
 
 
         @lombok.Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
         public static class Cordinator {
 
             private String id;
@@ -48,7 +50,10 @@ public class TournamentRqDto {
         }
 
         @lombok.Data
-        public static class OrganizerDto {
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
+        public static class Organizer {
 
             private String id;
 
@@ -56,13 +61,19 @@ public class TournamentRqDto {
 
 
         @lombok.Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
         public static class Prizes {
-
+            private int position;
             private String prize;
 
         }
 
         @lombok.Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
         public static class SalesStages {
 
             private String stageName;
