@@ -10,6 +10,6 @@ public interface ManagementTournamentRepository {
 
     Mono<Long> countByStatusAndFreeAndIdOrganizer(String status, boolean free, String idOrganizer);
 
-    Flux<TournamentRq> findAll();
+    Mono<TournamentRq> findById(String id);
 
 }

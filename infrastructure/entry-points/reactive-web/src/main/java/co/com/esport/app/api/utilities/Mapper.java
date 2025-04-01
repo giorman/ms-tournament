@@ -6,10 +6,10 @@ import co.com.esport.app.api.dtos.request.TournamentRqDto;
 import co.com.esport.app.api.dtos.response.CreateTournamentRsDTO;
 import co.com.esport.app.model.gestiontorneo.request.TournamentRq;
 import co.com.esport.app.model.gestiontorneo.response.CreateTournamentRs;
-import co.com.esport.app.model.gestiontorneo.utils.Status;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,16 +18,16 @@ import java.util.stream.Collectors;
 public class Mapper {
 
     //metodo para mapear de TournamentDTO a TournamentRq
-    public TournamentRq mapToTournamentRq(TournamentRqDto tournamentRqDto , ServerRequest serverRequest){
+    public TournamentRq mapToTournamentRq(TournamentRqDto tournamentRqDto ){
 
         return TournamentRq.builder()
-                .messageId(serverRequest.headers().firstHeader("message-id"))
+                .id(tournamentRqDto.getData().getId())
                 .name(tournamentRqDto.getData().getTournamentName())
                 .game(tournamentRqDto.getData().getGame())
                 .description(tournamentRqDto.getData().getDescription())
-                .idOrganizer(tournamentRqDto.getData().getOrganizer().getId())
+                .idOrganizer(tournamentRqDto.getData().getOrganizer() != null ? tournamentRqDto.getData().getOrganizer().getId() : null)
                 .streamingPlatform(tournamentRqDto.getData().getStreamingPlatform())
-                .status(Status.ACTIVE.getStatus())
+                .status(tournamentRqDto.getData().getStatus() != null ? tournamentRqDto.getData().getStatus().toUpperCase() : null)
                 .startDate(tournamentRqDto.getData().getStartDate())
                 .endDate(tournamentRqDto.getData().getEndDate())
                 .category(tournamentRqDto.getData().getCategory().toUpperCase())
@@ -39,11 +39,32 @@ public class Mapper {
                 .build();
     }
 
-    public CreateTournamentRsDTO mapToCreateTournamentRsDTO(CreateTournamentRs createTournamentRs, ServerRequest.Headers headers , String requestDateTime) {
+    public TournamentRq mapToUpdateTournamentRq(TournamentRqDto tournamentRqDto ){
+
+        return TournamentRq.builder()
+                .id(tournamentRqDto.getData().getId())
+                .name(tournamentRqDto.getData().getTournamentName())
+                .game(tournamentRqDto.getData().getGame())
+                .description(tournamentRqDto.getData().getDescription())
+                .idOrganizer(tournamentRqDto.getData().getOrganizer().getId())
+                .streamingPlatform(tournamentRqDto.getData().getStreamingPlatform())
+                .status(tournamentRqDto.getData().getStatus().toUpperCase())
+                .startDate(tournamentRqDto.getData().getStartDate())
+                .endDate(tournamentRqDto.getData().getEndDate())
+                .category(tournamentRqDto.getData().getCategory().toUpperCase())
+                .prizes(mapToPrizes(tournamentRqDto.getData().getPrizes()))
+                .salesStages(tournamentRqDto.getData().getSalesStages() != null && !tournamentRqDto.getData().getSalesStages().isEmpty() ? mapToSalesStages(tournamentRqDto.getData().getSalesStages()) : new ArrayList<>())
+                .cordinator(mapToCordinators(tournamentRqDto.getData().getCordinator()))
+                .free(tournamentRqDto.getData().getFree())
+                .numberPlayers(tournamentRqDto.getData().getNumberPlayers())
+                .build();
+    }
+
+    public CreateTournamentRsDTO mapToCreateTournamentRsDTO(CreateTournamentRs createTournamentRs, ServerRequest request) {
         return CreateTournamentRsDTO.builder()
                 .meta(MetaDTO.builder()
-                        .messageId(headers.firstHeader("message-id"))
-                        .requestDateTime(requestDateTime)
+                        .messageId(request.attribute("message-id").orElse("default-message-id").toString())
+                        .requestDateTime(request.attribute("request-time").orElse(Instant.now().toString()).toString())
                         .build())
                 .data(CreateTournamentRsDTO.Data.builder()
                         .idTournament(createTournamentRs.getIdTournament())
@@ -55,7 +76,10 @@ public class Mapper {
 
     private ArrayList<TournamentRq.Prizes> mapToPrizes(List<TournamentRqDto.Data.Prizes> prizes) {
         return prizes.stream()
-                .map(prize -> new TournamentRq.Prizes(prize.getPrize()))
+                .map(prize -> TournamentRq.Prizes.builder()
+                        .position(prize.getPosition())
+                        .prize(prize.getPrize())
+                        .build())
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
