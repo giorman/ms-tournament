@@ -24,7 +24,6 @@ public class Handler {
     private final Mapper mapper;
 
 
-//private  final UseCase2 useCase2;
     public Mono<ServerResponse> createTournament(ServerRequest serverRequest) {
 
         return serverRequest
@@ -35,7 +34,7 @@ public class Handler {
                         .then(Mono.just(dto)))
                 .map(mapper::mapToTournamentRq)
                 .flatMap(managementTournamentUseCase::createTournament)
-                .flatMap(dto -> Mono.just(mapper.mapToCreateTournamentRsDTO(dto, serverRequest)))
+                .flatMap(dto -> Mono.just(mapper.mapToTournamentRsDTO(dto, serverRequest)))
                 .flatMap(response -> ServerResponse.created(URI.create("/v1/api/ms-tournament/create/".concat(response.getData().getIdTournament()))).bodyValue(response));
     }
 
@@ -49,14 +48,11 @@ public class Handler {
                         .then(Mono.just(dto)))
                 .map(mapper::mapToTournamentRq)
                 .flatMap(managementTournamentUseCase::updateTournament)
-                .flatMap(dto -> Mono.just(mapper.mapToCreateTournamentRsDTO(dto, serverRequest)))
-                .flatMap(response -> ServerResponse.created(URI.create("/v1/api/ms-tournament/create/".concat(response.getData().getIdTournament()))).bodyValue(response));
+                .flatMap(dto -> Mono.just(mapper.mapToTournamentRsDTO(dto, serverRequest)))
+                .flatMap(response -> ServerResponse.ok().bodyValue(response));
     }
 
-    public Mono<ServerResponse> listenGETOtherUseCase(ServerRequest serverRequest) {
-        // useCase2.logic();
-        return ServerResponse.ok().bodyValue("");
-    }
+
 
 
 }

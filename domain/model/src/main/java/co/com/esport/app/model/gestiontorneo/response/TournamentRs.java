@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor //
 @NoArgsConstructor
 @Builder(toBuilder = true) //Construye
-public class CreateTournamentRs {
+public class TournamentRs {
     private String idTournament;
     private String nameTournament;
 }
