@@ -3,11 +3,13 @@ package co.com.esport.app.api.utilities;
 
 import co.com.esport.app.api.dtos.commons.MetaDTO;
 import co.com.esport.app.api.dtos.request.TournamentRqDto;
-import co.com.esport.app.api.dtos.response.CreateTournamentRsDTO;
+import co.com.esport.app.api.dtos.response.TournamentRsDTO;
 import co.com.esport.app.model.gestiontorneo.request.TournamentRq;
-import co.com.esport.app.model.gestiontorneo.response.CreateTournamentRs;
+import co.com.esport.app.model.gestiontorneo.response.TournamentRs;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
+import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Log4j2
 public class Mapper {
 
     //metodo para mapear de TournamentDTO a TournamentRq
@@ -39,38 +42,25 @@ public class Mapper {
                 .build();
     }
 
-    public TournamentRq mapToUpdateTournamentRq(TournamentRqDto tournamentRqDto ){
 
-        return TournamentRq.builder()
-                .id(tournamentRqDto.getData().getId())
-                .name(tournamentRqDto.getData().getTournamentName())
-                .game(tournamentRqDto.getData().getGame())
-                .description(tournamentRqDto.getData().getDescription())
-                .idOrganizer(tournamentRqDto.getData().getOrganizer().getId())
-                .streamingPlatform(tournamentRqDto.getData().getStreamingPlatform())
-                .status(tournamentRqDto.getData().getStatus().toUpperCase())
-                .startDate(tournamentRqDto.getData().getStartDate())
-                .endDate(tournamentRqDto.getData().getEndDate())
-                .category(tournamentRqDto.getData().getCategory().toUpperCase())
-                .prizes(mapToPrizes(tournamentRqDto.getData().getPrizes()))
-                .salesStages(tournamentRqDto.getData().getSalesStages() != null && !tournamentRqDto.getData().getSalesStages().isEmpty() ? mapToSalesStages(tournamentRqDto.getData().getSalesStages()) : new ArrayList<>())
-                .cordinator(mapToCordinators(tournamentRqDto.getData().getCordinator()))
-                .free(tournamentRqDto.getData().getFree())
-                .numberPlayers(tournamentRqDto.getData().getNumberPlayers())
-                .build();
-    }
-
-    public CreateTournamentRsDTO mapToCreateTournamentRsDTO(CreateTournamentRs createTournamentRs, ServerRequest request) {
-        return CreateTournamentRsDTO.builder()
+    public TournamentRsDTO mapToTournamentRsDTO(TournamentRs tournamentRs, ServerRequest request) {
+        return TournamentRsDTO.builder()
                 .meta(MetaDTO.builder()
                         .messageId(request.attribute("message-id").orElse("default-message-id").toString())
                         .requestDateTime(request.attribute("request-time").orElse(Instant.now().toString()).toString())
                         .build())
-                .data(CreateTournamentRsDTO.Data.builder()
-                        .idTournament(createTournamentRs.getIdTournament())
-                        .nameTournament(createTournamentRs.getNameTournament())
+                .data(TournamentRsDTO.Data.builder()
+                        .idTournament(tournamentRs.getIdTournament())
+                        .nameTournament(tournamentRs.getNameTournament())
                         .build())
                 .build();
+    }
+
+    public Mono<Void> mapToLog(TournamentRqDto tournamentRqDto, ServerRequest request) {
+        log.info("Request Headers: {}", request.headers().asHttpHeaders());
+        log.info("Request Path: {}", request.path());
+        log.info("Request Body: {}", tournamentRqDto.toString());
+        return Mono.empty();
     }
 
 
@@ -102,6 +92,8 @@ public class Mapper {
                         .build())
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+
+
 
 
 }

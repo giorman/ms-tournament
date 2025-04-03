@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateTournamentRsDTO {
+public class TournamentRsDTO {
     private MetaDTO meta;
     private Data data;
 

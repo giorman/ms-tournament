@@ -12,4 +12,6 @@ public interface ManagementTournamentRepository {
 
     Mono<TournamentRq> findById(String id);
 
+    Mono<TournamentRq> findByIdAndIdOrganizer(String id, String idOrganizer);
+
 }

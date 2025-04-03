@@ -20,6 +20,8 @@ public enum ConstantException implements ErrorManagment {
             CodeMessage.SALES_STAGES_INVALID),
     CREATE_ERROR(
             CodeMessage.CREATE_BD_ERROR),
+    UPDATE_ERROR(
+            CodeMessage.UPDATE_BD_ERROR),
     TOURNEY_LIMIT_EXCEEDED(
             CodeMessage.FREE_LIMIT_EXCEEDED),
     CORDINATOR_LIMIT_EXCEEDED(

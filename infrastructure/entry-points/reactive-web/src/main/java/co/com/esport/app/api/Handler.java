@@ -15,7 +15,6 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 
 @Component
-@Log4j2
 @RequiredArgsConstructor
 public class Handler {
     private final HeadersValidation headersValidation;
@@ -24,18 +23,19 @@ public class Handler {
     private final Mapper mapper;
 
 
-//private  final UseCase2 useCase2;
     public Mono<ServerResponse> createTournament(ServerRequest serverRequest) {
 
         return serverRequest
                 .bodyToMono(TournamentRqDto.class)
-                .doOnNext(log::info)
+                .doOnNext(tournamentRqDto -> {
+                    mapper.mapToLog(tournamentRqDto, serverRequest);
+                })
                 .flatMap(tournamentValidation::BodyCreate)
                 .flatMap(dto -> headersValidation.validateHeaders(serverRequest)
                         .then(Mono.just(dto)))
                 .map(mapper::mapToTournamentRq)
                 .flatMap(managementTournamentUseCase::createTournament)
-                .flatMap(dto -> Mono.just(mapper.mapToCreateTournamentRsDTO(dto, serverRequest)))
+                .flatMap(dto -> Mono.just(mapper.mapToTournamentRsDTO(dto, serverRequest)))
                 .flatMap(response -> ServerResponse.created(URI.create("/v1/api/ms-tournament/create/".concat(response.getData().getIdTournament()))).bodyValue(response));
     }
 
@@ -43,20 +43,19 @@ public class Handler {
 
         return serverRequest
                 .bodyToMono(TournamentRqDto.class)
-                .doOnNext(log::info)
+                .doOnNext(tournamentRqDto -> {
+                  mapper.mapToLog(tournamentRqDto, serverRequest);
+                })
                 .flatMap(tournamentValidation::BodyUpdate)
                 .flatMap(dto -> headersValidation.validateHeaders(serverRequest)
                         .then(Mono.just(dto)))
                 .map(mapper::mapToTournamentRq)
                 .flatMap(managementTournamentUseCase::updateTournament)
-                .flatMap(dto -> Mono.just(mapper.mapToCreateTournamentRsDTO(dto, serverRequest)))
-                .flatMap(response -> ServerResponse.created(URI.create("/v1/api/ms-tournament/create/".concat(response.getData().getIdTournament()))).bodyValue(response));
+                .flatMap(dto -> Mono.just(mapper.mapToTournamentRsDTO(dto, serverRequest)))
+                .flatMap(response -> ServerResponse.ok().bodyValue(response));
     }
 
-    public Mono<ServerResponse> listenGETOtherUseCase(ServerRequest serverRequest) {
-        // useCase2.logic();
-        return ServerResponse.ok().bodyValue("");
-    }
+
 
 
 }

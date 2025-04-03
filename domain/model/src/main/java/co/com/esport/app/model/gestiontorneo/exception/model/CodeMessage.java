@@ -4,6 +4,7 @@ public class CodeMessage {
 
     public static final String UNKNOWN_ERROR_DETAIL = "Ha ocurrido un error interno en el servicio";
     public static final String CREATE_BD_ERROR = "Ha ocurrido un error interno bd creando el registro";
+    public static final String UPDATE_BD_ERROR = "Ha ocurrido un error interno bd actualizando el registro";
     public static final String SALES_STAGES_INVALID = "Las etapas de ventas son requeridas";
     public static final String CATEGORY_NOT_FOUND = "La categoria no existe";
     public static final String STATUS_INVALID = "El estado no es valido";

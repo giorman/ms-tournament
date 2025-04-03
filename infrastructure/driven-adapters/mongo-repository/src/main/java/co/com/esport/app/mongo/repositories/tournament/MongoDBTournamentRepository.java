@@ -12,4 +12,6 @@ public interface MongoDBTournamentRepository extends ReactiveMongoRepository<Tou
     Mono<TournamentEntity> findByName(String name);
 
     Mono<Long> countByStatusAndFreeAndIdOrganizer(String status, boolean free, String idOrganizer);
+
+    Mono<TournamentEntity> findByIdAndIdOrganizer(String id, String idOrganizer);
 }

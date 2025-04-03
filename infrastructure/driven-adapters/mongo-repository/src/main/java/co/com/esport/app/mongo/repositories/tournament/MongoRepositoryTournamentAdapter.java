@@ -30,5 +30,11 @@ public class MongoRepositoryTournamentAdapter extends AdapterOperations<Tourname
         return repository.countByStatusAndFreeAndIdOrganizer(status, free, idOrganizer);
     }
 
+    @Override
+    public Mono<TournamentRq> findByIdAndIdOrganizer(String id, String idOrganizer) {
+        return repository.findByIdAndIdOrganizer(id, idOrganizer)
+                .map(tournamentEntity -> mapper.map(tournamentEntity, TournamentRq.class));
+    }
+
 
 }
