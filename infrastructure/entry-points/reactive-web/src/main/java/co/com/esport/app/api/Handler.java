@@ -15,7 +15,6 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 
 @Component
-@Log4j2
 @RequiredArgsConstructor
 public class Handler {
     private final HeadersValidation headersValidation;
@@ -28,7 +27,9 @@ public class Handler {
 
         return serverRequest
                 .bodyToMono(TournamentRqDto.class)
-                .doOnNext(log::info)
+                .doOnNext(tournamentRqDto -> {
+                    mapper.mapToLog(tournamentRqDto, serverRequest);
+                })
                 .flatMap(tournamentValidation::BodyCreate)
                 .flatMap(dto -> headersValidation.validateHeaders(serverRequest)
                         .then(Mono.just(dto)))
@@ -42,7 +43,9 @@ public class Handler {
 
         return serverRequest
                 .bodyToMono(TournamentRqDto.class)
-                .doOnNext(log::info)
+                .doOnNext(tournamentRqDto -> {
+                  mapper.mapToLog(tournamentRqDto, serverRequest);
+                })
                 .flatMap(tournamentValidation::BodyUpdate)
                 .flatMap(dto -> headersValidation.validateHeaders(serverRequest)
                         .then(Mono.just(dto)))

@@ -6,8 +6,10 @@ import co.com.esport.app.api.dtos.request.TournamentRqDto;
 import co.com.esport.app.api.dtos.response.TournamentRsDTO;
 import co.com.esport.app.model.gestiontorneo.request.TournamentRq;
 import co.com.esport.app.model.gestiontorneo.response.TournamentRs;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
+import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Log4j2
 public class Mapper {
 
     //metodo para mapear de TournamentDTO a TournamentRq
@@ -53,6 +56,13 @@ public class Mapper {
                 .build();
     }
 
+    public Mono<Void> mapToLog(TournamentRqDto tournamentRqDto, ServerRequest request) {
+        log.info("Request Headers: {}", request.headers().asHttpHeaders());
+        log.info("Request Path: {}", request.path());
+        log.info("Request Body: {}", tournamentRqDto.toString());
+        return Mono.empty();
+    }
+
 
     private ArrayList<TournamentRq.Prizes> mapToPrizes(List<TournamentRqDto.Data.Prizes> prizes) {
         return prizes.stream()
@@ -82,6 +92,8 @@ public class Mapper {
                         .build())
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+
+
 
 
 }
